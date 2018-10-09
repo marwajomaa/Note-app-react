@@ -4,44 +4,48 @@ import { IoMdTrash } from 'react-icons/io';
 import './style.css'
 
 class Note extends Component {
-  state ={
-    edit :false
-  }
+ state ={
+   edit:false
+ }
 
-  handleEdit=()=>{
-    this.setState({edit:true})
-  }
+handleEdit =()=>{
+  this.setState({edit:true})
+}
 
-  renderNote=()=>{
-    return(
-      <div className="Note">
+save=(e)=>{
+   e.preventDefault();
+   const { props: { index }, _newNote: { value } } = this;
+   this.props.update(value,index)
+   this.setState({ edit: false });
+}
+
+remove=()=>{
+  this.props.remove(this.props.index)
+}
+
+renderNote=()=>{
+  return(
+      <div>
       <p>{this.props.children}</p>
-      <span>
       <button onClick={this.handleEdit}><FaPencilAlt/></button>
-      <button><IoMdTrash/></button>
-      </span>
+      <button onClick={this.remove}><IoMdTrash /></button>
       </div>
     )
   }
 
-  save=()=>{
-    alert('note is saved')
+editNote=()=>{
+    return(
+      <form onSubmit={this.save}>
+      <textarea ref={input=>this._newNote =input}/>
+      <button>save</button>
+      </form>
+    )
   }
-
- renderEditForm=()=>{
-     return (
-       <div>
-       <textarea />
-       <button onClick={this.save}>Save</button>
-       </div>
-     )
-   }
-
-   render(){
-     return(
-       this.state.edit?this.renderEditForm():this.renderNote()
-     )
-   }
+render(){
+    return(
+      this.state.edit?this.editNote():this.renderNote()
+    )
+  }
 
 }
 
